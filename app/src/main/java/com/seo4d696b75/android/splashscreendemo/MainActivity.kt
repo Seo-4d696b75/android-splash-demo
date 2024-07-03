@@ -13,14 +13,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.seo4d696b75.android.splashscreendemo.ui.theme.SplashScreenDemoTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
 
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
+
+        // Activityが描画可能になってもスプラッシュ画面を強制的に1秒間表示する
+        var isSplashShown = true
+        splashScreen.setKeepOnScreenCondition { isSplashShown }
+        lifecycleScope.launch {
+            delay(1000L)
+            isSplashShown = false
+        }
+
         setContent {
             SplashScreenDemoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
