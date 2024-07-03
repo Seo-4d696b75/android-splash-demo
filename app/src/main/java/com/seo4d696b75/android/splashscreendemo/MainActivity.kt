@@ -1,8 +1,10 @@
 package com.seo4d696b75.android.splashscreendemo
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.window.SplashScreen
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -52,7 +54,13 @@ class MainActivity : ComponentActivity() {
                         val intent = Intent(this, MainActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         }
-                        if (Build.VERSION.SDK_INT in listOf(31, 32)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            // themes.xml に windowSplashScreenBehavior = icon_preferred を指定した場合は省略可能
+                            val option = ActivityOptions.makeBasic().apply {
+                                splashScreenStyle = SplashScreen.SPLASH_SCREEN_STYLE_ICON
+                            }.toBundle()
+                            startActivity(intent, option)
+                        } else if (Build.VERSION.SDK_INT in listOf(31, 32)) {
                             val options = bundleOf("android.activity.splashScreenStyle" to 1)
                             startActivity(intent, options)
                         } else {
