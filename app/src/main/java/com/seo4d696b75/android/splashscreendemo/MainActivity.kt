@@ -1,6 +1,7 @@
 package com.seo4d696b75.android.splashscreendemo
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.seo4d696b75.android.splashscreendemo.ui.theme.SplashScreenDemoTheme
@@ -50,7 +52,12 @@ class MainActivity : ComponentActivity() {
                         val intent = Intent(this, MainActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         }
-                        startActivity(intent)
+                        if (Build.VERSION.SDK_INT in listOf(31, 32)) {
+                            val options = bundleOf("android.activity.splashScreenStyle" to 1)
+                            startActivity(intent, options)
+                        } else {
+                            startActivity(intent)
+                        }
                     },
                 )
             }
